@@ -97,4 +97,16 @@
         <appender-ref ref="${log.appender}"/>
     </logger>
 
+    <logger name="io.jaeger" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="de.codecentric" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="io.netty" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
 </included>

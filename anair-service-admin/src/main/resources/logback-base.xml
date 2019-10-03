@@ -102,4 +102,11 @@
         <appender-ref ref="${log.appender}"/>
     </logger>
 
+    <logger name="io.netty" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="reactor" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
 </included>

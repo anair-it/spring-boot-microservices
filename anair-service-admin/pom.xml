@@ -8,14 +8,14 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>anair-service-c</artifactId>
+    <artifactId>anair-service-admin</artifactId>
 
     <groupId>org.anair.services</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>anair:anair-service-c</name>
-    <description>anair:anair-service-c</description>
+    <name>anair:anair-service-admin</name>
+    <description>anair:anair-service-admin</description>
 
     <properties>
         <docker.registry.url>localhost:5000</docker.registry.url>
@@ -24,21 +24,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-server</artifactId>
+            <version>${spring-boot-admin.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-server-ui-login</artifactId>
+            <version>1.5.7</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>3.10.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
     </dependencies>
 
@@ -55,26 +52,6 @@
                             <goal>resolve</goal>
                         </goals>
                         <inherited>false</inherited>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.github.os72</groupId>
-                <artifactId>protoc-jar-maven-plugin</artifactId>
-                <version>3.7.0.1</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <protocVersion>3.1.0</protocVersion>
-                            <inputDirectories>
-                                <include>src/main/resources</include>
-                            </inputDirectories>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -97,18 +74,18 @@
                             <!--<registry>${docker.registry.url}/${project.artifactId}</registry>-->
                             <images>
                                 <image>
-                                    <name>anair-service-c:0.0.1</name>
-                                    <alias>anair-service-c</alias>
+                                    <name>anair-service-admin:0.0.1</name>
+                                    <alias>anair-service-admin</alias>
                                     <run>
                                         <env>
                                             <LOG_APPENDER>STDOUT</LOG_APPENDER>
                                             <LOG_LEVEL>INFO</LOG_LEVEL>
                                         </env>
                                         <ports>
-                                            <port>8082:8082</port>
+                                            <port>18080:8080</port>
                                         </ports>
                                         <wait>
-                                            <url>http://localhost:8082/anair-service-c/actuator/health</url>
+                                            <url>http://localhost:18080/admin/actuator/health</url>
                                             <time>10000</time>
                                         </wait>
                                     </run>

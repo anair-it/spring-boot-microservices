@@ -45,12 +45,10 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
@@ -91,8 +89,8 @@
                             <!--<registry>${docker.registry.url}/${project.artifactId}</registry>-->
                             <images>
                                 <image>
-                                    <name>${project.artifactId}:${project.version}</name>
-                                    <alias>${project.artifactId}</alias>
+                                    <name>anair-service-b:0.0.1</name>
+                                    <alias>anair-service-b</alias>
                                     <run>
                                         <env>
                                             <LOG_APPENDER>STDOUT</LOG_APPENDER>

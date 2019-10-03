@@ -11,6 +11,8 @@
 - [Read more...](anair-rest-archetype/README.md)
 
 ## Spring boot services
+- [Admin console](anair-service-admin/README.md)
+    - Spring boot services admin console
 - [Service A](anair-service-a/README.md)
     - Publishes a message on a Kafka topic
     - Invoke a GET grpc endpoint
@@ -23,11 +25,15 @@
 - Start Kafka locally
 - [Start Jaeger server](https://www.jaegertracing.io/docs/1.6/getting-started/)
     - Start Jaeger UI. If using a different host and port, update the same _application.properties_ in all services
-- Run `mvn clean spring-boot:run` on all 3 services to start it
+- Start anair-service-admin application
+- Run `mvn clean spring-boot:run` on all services to start it
 
 ## Swagger UI
 - [Service A](http://localhost:8080/anair-service-a/swagger-ui.html)
 - [Service C](http://localhost:8082/anair-service-c/swagger-ui.html)
+
+## Admin console
+http://localhost:18080/admin
 
 # Executing service endpoints
 In Service A swagger page, try out __/publish/{userId}__ endpoint. This will execute a kafka and grpc transaction. Check logs of all 3 services. View the trace graph in Jaeger UI.

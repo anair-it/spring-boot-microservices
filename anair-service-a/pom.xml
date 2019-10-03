@@ -99,8 +99,8 @@
 <!--                            <registry>${docker.registry.url}/${project.artifactId}</registry>-->
                             <images>
                                 <image>
-                                    <name>${project.artifactId}:${project.version}</name>
-                                    <alias>${project.artifactId}</alias>
+                                    <name>anair-service-a:0.0.1</name>
+                                    <alias>anair-service-a</alias>
                                     <run>
                                         <env>
                                             <LOG_APPENDER>STDOUT</LOG_APPENDER>
