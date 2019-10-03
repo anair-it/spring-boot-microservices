@@ -86,7 +86,7 @@
 
                         <configuration>
                             <!-- Uncomment to add corporate or local docker registry-->
-                            <!--<registry>${docker.registry.url}/${project.artifactId}</registry>-->
+                            <!--<registry>${docker.registry.url}/anair-service-b</registry>-->
                             <images>
                                 <image>
                                     <name>anair-service-b:0.0.1</name>

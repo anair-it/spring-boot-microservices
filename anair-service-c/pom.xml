@@ -19,6 +19,8 @@
 
     <properties>
         <docker.registry.url>localhost:5000</docker.registry.url>
+        <protobuf.version>3.10.0</protobuf.version>
+        <protobuf-plugin.version>3.7.0.1</protobuf-plugin.version>
     </properties>
 
 
@@ -38,7 +40,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.10.0</version>
+            <version>${protobuf.version}</version>
         </dependency>
     </dependencies>
 
@@ -62,7 +64,7 @@
             <plugin>
                 <groupId>com.github.os72</groupId>
                 <artifactId>protoc-jar-maven-plugin</artifactId>
-                <version>3.7.0.1</version>
+                <version>${protobuf-plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -94,7 +96,7 @@
 
                         <configuration>
                             <!-- Uncomment to add corporate or local docker registry-->
-                            <!--<registry>${docker.registry.url}/${project.artifactId}</registry>-->
+                            <!--<registry>${docker.registry.url}/anair-service-c</registry>-->
                             <images>
                                 <image>
                                     <name>anair-service-c:0.0.1</name>

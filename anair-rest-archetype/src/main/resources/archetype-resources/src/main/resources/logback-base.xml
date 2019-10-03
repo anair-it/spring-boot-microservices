@@ -97,7 +97,7 @@
         <appender-ref ref="${log.appender}"/>
     </logger>
 
-    <logger name="io.jaeger" level="error" additivity="false">
+    <logger name="io.jaegertracing" level="error" additivity="false">
         <appender-ref ref="${log.appender}"/>
     </logger>
 

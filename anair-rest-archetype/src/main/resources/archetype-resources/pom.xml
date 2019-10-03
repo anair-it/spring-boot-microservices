@@ -90,7 +90,7 @@
 
                         <configuration>
                             <!-- Uncomment to add corporate or local docker registry-->
-                            <!--<registry>${docker.registry.url}/${project.artifactId}</registry>-->
+                            <!--<registry>${docker.registry.url}/${artifactId}</registry>-->
                             <images>
                                 <image>
                                     <name>${artifactId}:${version}</name>
@@ -101,7 +101,7 @@
                                             <LOG_LEVEL>INFO</LOG_LEVEL>
                                         </env>
                                         <ports>
-                                            <port>8080:8080</port>
+                                            <port>8080:8080</port> <!-- Change port as per server.port in application.properties-->
                                         </ports>
                                         <wait>
                                             <url>http://localhost:8080/${artifactId}/actuator/health</url>
