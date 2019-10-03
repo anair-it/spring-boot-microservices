@@ -23,7 +23,7 @@
 - Start Kafka locally
 - [Start Jaeger server](https://www.jaegertracing.io/docs/1.6/getting-started/)
     - Start Jaeger UI. If using a different host and port, update the same _application.properties_ in all services
-- `mvn clean spring-boot:run` on all 3 services
+- Run `mvn clean spring-boot:run` on all 3 services to start it
 
 ## Swagger UI
 - [Service A](http://localhost:8080/anair-service-a/swagger-ui.html)
