@@ -97,19 +97,18 @@
                             <!--<registry>${docker.registry.url}/${project.artifactId}</registry>-->
                             <images>
                                 <image>
-                                    <name>${project.artifactId}:${project.version}</name>
-                                    <alias>${project.artifactId}</alias>
+                                    <name>${artifactId}:${project.version}</name>
+                                    <alias>${artifactId}</alias>
                                     <run>
                                         <env>
                                             <LOG_APPENDER>STDOUT</LOG_APPENDER>
                                             <LOG_LEVEL>INFO</LOG_LEVEL>
-                                            <spring_profiles_active>local</spring_profiles_active>
                                         </env>
                                         <ports>
-                                            <port>18080:8080</port>
+                                            <port>8080:8080</port>
                                         </ports>
                                         <wait>
-                                            <url>http://localhost:18080/${project.artifactId}/actuator/health</url>
+                                            <url>http://localhost:8080/${artifactId}/actuator/health</url>
                                             <time>10000</time>
                                         </wait>
                                     </run>
@@ -126,26 +125,6 @@
                                     <goal>remove</goal>
                                     <goal>build</goal>
                                     <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>integ-test</id>
-            <activation>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>integration-test</goal>
                                 </goals>
                             </execution>
                         </executions>
