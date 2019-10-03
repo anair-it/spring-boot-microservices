@@ -1,0 +1,15 @@
+syntax = "proto3";
+package book;
+option java_package = "org.anair.services.protobuf";
+option java_outer_classname = "Books";
+
+message Book {
+    int32 id = 1;
+    string name = 2;
+    repeated Author author = 3;
+}
+message Author {
+    int32 id = 1;
+    string first_name = 2;
+    string last_name = 3;
+}

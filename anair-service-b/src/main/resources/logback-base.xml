@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} [%mdc] - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="LOGSTASH_STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <pattern>yyyy-MM-dd'T'HH:mm:ss.SSS</pattern>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <logLevel/>
+                <threadName/>
+                <loggerName/>
+                <mdc/>
+                <arguments/>
+                <message/>
+                <stackHash/>
+                <throwableClassName/>
+                <throwableRootCauseClassName/>
+                <stackTrace/>
+            </providers>
+        </encoder>
+    </appender>
+
+
+    <logger name="io.undertow" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="org.anair" level="${log.level}" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="org.apache.http" level="info" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="org.apache.kafka" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="org.xnio" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="org.springframework" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="com.zaxxer" level="error" addivitity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="ch.qos" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="info" addivitity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="springfox" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="com.zaxxer.hikari" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <!-- Print sql. Change to debug level -->
+    <logger name="org.springframework.jdbc.core" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <!-- Print sql parameters. Change to trace level -->
+    <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="org.hibernate" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+</included>

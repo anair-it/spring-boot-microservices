@@ -1,0 +1,25 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <jmxConfigurator/>
+
+    <!-- N.B. the delay is set to avoid having logback stop before the service -->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook">
+        <delay>5000</delay>
+    </shutdownHook>
+
+    <property name="log.appender" value="${symbol_dollar}{LOG_APPENDER:-STDOUT}"/>
+    <property name="log.level" value="${symbol_dollar}{LOG_LEVEL:-DEBUG}"/>
+
+    <include resource="logback-base.xml"/>
+
+    <root level="${symbol_dollar}{log.level}">
+        <appender-ref ref="${symbol_dollar}{log.appender}"/>
+    </root>
+
+
+</configuration>

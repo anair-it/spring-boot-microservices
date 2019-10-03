@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <jmxConfigurator/>
+
+    <!-- N.B. the delay is set to avoid having logback stop before the service -->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook">
+        <delay>5000</delay>
+    </shutdownHook>
+
+    <property name="log.appender" value="${LOG_APPENDER:-STDOUT}"/>
+    <property name="log.level" value="${LOG_LEVEL:-DEBUG}"/>
+
+    <include resource="logback-base.xml"/>
+
+    <root level="${log.level}">
+        <appender-ref ref="${log.appender}"/>
+    </root>
+
+
+</configuration>
