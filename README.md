@@ -12,21 +12,25 @@
 
 ## Spring boot services
 - [Service A](anair-service-a/README.md)
+    - Publishes a message on a Kafka topic
+    - Invoke a GET grpc endpoint
 - [Service B](anair-service-b/README.md)
+    - Consumes message from the Kafka topic published by Service A
 - [Service C](anair-service-c/README.md)
-
+    - grpc endpoint producing protobuffer content when invoked by Service A
 
 # Starting services
 - Start Kafka locally
 - [Start Jaeger server](https://www.jaegertracing.io/docs/1.6/getting-started/)
-- Start all 3 spring boot services
+    - Start Jaeger UI. If using a different host and port, update the same _application.properties_ in all services
+- `mvn clean spring-boot:run` on all 3 services
 
 ## Swagger UI
 - [Service A](http://localhost:8080/anair-service-a/swagger-ui.html)
 - [Service C](http://localhost:8082/anair-service-c/swagger-ui.html)
 
 # Executing service endpoints
-In Service A swagger page, try out __/publish/{userId}__ endpoint. This will execute a kafka and gRPC transaction. Check logs of all 3 services. View the trace graph below.
+In Service A swagger page, try out __/publish/{userId}__ endpoint. This will execute a kafka and grpc transaction. Check logs of all 3 services. View the trace graph in Jaeger UI.
 
  
 # Trace graph

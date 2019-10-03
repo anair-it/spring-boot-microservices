@@ -93,4 +93,8 @@
         <appender-ref ref="${log.appender}"/>
     </logger>
 
+    <logger name="io.opentracing" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
 </included>
