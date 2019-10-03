@@ -128,10 +128,10 @@
                                             <LOG_LEVEL>INFO</LOG_LEVEL>
                                         </env>
                                         <ports>
-                                            <port>18080:8080</port>
+                                            <port>8080:8080</port>
                                         </ports>
                                         <wait>
-                                            <url>http://localhost:18080/anair-service-a/actuator/health</url>
+                                            <url>http://localhost:8080/anair-service-a/actuator/health</url>
                                             <time>10000</time>
                                         </wait>
                                     </run>

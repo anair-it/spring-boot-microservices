@@ -97,13 +97,12 @@
                                         <env>
                                             <LOG_APPENDER>STDOUT</LOG_APPENDER>
                                             <LOG_LEVEL>INFO</LOG_LEVEL>
-                                            <spring_profiles_active>local</spring_profiles_active>
                                         </env>
                                         <ports>
                                             <port>8081:8081</port>
                                         </ports>
                                         <wait>
-                                            <url>http://localhost:18080/${project.artifactId}/actuator/health</url>
+                                            <url>http://localhost:8081/anair-service-b/actuator/health</url>
                                             <time>10000</time>
                                         </wait>
                                     </run>
