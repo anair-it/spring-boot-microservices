@@ -43,7 +43,7 @@
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>anair-service-c</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot.experimental</groupId>

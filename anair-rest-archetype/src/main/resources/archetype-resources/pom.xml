@@ -59,7 +59,7 @@
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>${artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot.experimental</groupId>
@@ -93,7 +93,7 @@
                             <!--<registry>${docker.registry.url}/${project.artifactId}</registry>-->
                             <images>
                                 <image>
-                                    <name>${artifactId}:${project.version}</name>
+                                    <name>${artifactId}:${version}</name>
                                     <alias>${artifactId}</alias>
                                     <run>
                                         <env>
