@@ -1,6 +1,7 @@
 version: '3'
 services:
 
+##---- Infrastructure services ----##
   jaeger:
     image: jaegertracing/all-in-one:1.6
     container_name: jaeger
@@ -46,6 +47,59 @@ services:
       - 9092:9092
       - 9094:9094
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: on-failure
+    ports:
+      - 9090:9090
+    volumes:
+      - ./metrics/prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    links:
+      - cadvisor:cadvisor
+      - node-exporter:node-exporter
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: monitoring_node_exporter
+    restart: unless-stopped
+    expose:
+      - 9100
+
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: monitoring_cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    expose:
+      - 28080
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    user: "104"
+    restart: on-failure
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./metrics/grafana/provisioning/:/etc/grafana/provisioning/
+    env_file:
+      - ./metrics/grafana/grafana.env
+
+##---- Microservices ----##
   service-admin:
     build: anair-service-admin
     container_name: anair-service-admin
@@ -85,3 +139,8 @@ services:
       - OPENTRACING_JAEGER_UDP-SENDER_HOST=jaeger
     ports:
       - 8082:8082
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
+
