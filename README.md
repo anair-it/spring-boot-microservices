@@ -21,19 +21,32 @@
 - [Service C](anair-service-c/README.md)
     - grpc endpoint producing protobuffer content when invoked by Service A
 
-# Starting services
+# Running services
+## As Docker containers
+- Navigate to this project
+- Review _docker-compose.yml_ file
+- Run `docker-compose up` to start the following services:
+    - Jaeger
+    - Zookeeper
+    - Kafka
+    - Spring boot admin
+    - Service A
+    - Service B
+    - Service C
+    
+## Through IDE as spring boot services
 - Start Kafka locally
 - [Start Jaeger server](https://www.jaegertracing.io/docs/1.6/getting-started/)
     - Start Jaeger UI. If using a different host and port, update the same _application.properties_ in all services
 - Start anair-service-admin application
 - Run `mvn clean spring-boot:run` on all services to start it
 
-## Swagger UI
-- [Service A](http://localhost:8080/anair-service-a/swagger-ui.html)
-- [Service C](http://localhost:8082/anair-service-c/swagger-ui.html)
 
-## Admin console
-http://localhost:18080/admin
+## UI
+- [Jaeger UI](http://localhost:16686)
+- [Swagger UI - Service A](http://localhost:8080/anair-service-a/swagger-ui.html)
+- [Swagger UI - Service C](http://localhost:8082/anair-service-c/swagger-ui.html)
+- [Spring boot admin](http://localhost:18080/admin)
 
 # Executing service endpoints
 In Service A swagger page, try out __/publish/{userId}__ endpoint. This will execute a kafka and grpc transaction. Check logs of all 3 services. View the trace graph in Jaeger UI.

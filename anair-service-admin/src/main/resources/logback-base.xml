@@ -109,4 +109,10 @@
     <logger name="reactor" level="error" additivity="false">
         <appender-ref ref="${log.appender}"/>
     </logger>
+
+    <logger name="org.thymeleaf" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+
 </included>
