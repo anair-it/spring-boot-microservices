@@ -44,14 +44,14 @@ The above microservices integrates with the following infrastructure components:
 - [OpenDistro Elasticsearch and Kibana](https://opendistro.github.io/for-elasticsearch-docs/) (Distributed logging)
 
 # Middleware services
-The above microservices integrates with the following infrastructure components:
+The above microservices integrates with the following middleware components:
 - [Apache Zookeeper](https://zookeeper.apache.org/) (Distributed coordination for Kafka)
 - [Apache Kafka](https://kafka.apache.org/) (Distributed messaging)
 
-# Running services
+# Running microservices
 ## In a Docker environment
 - Navigate to this project
-- Review _docker-compose.yml_ and _docker-compose-infra.yml_ filea
+- Review _docker-compose.yml_ and _docker-compose-infra.yml_ files
 - Run `mvn clean package` on anair-service-a, anair-service-b, anair-service-c, anair-service-admin. This has to be done anytime code is changed and has to be deployed in docker.
 - Run `docker-compose -f docker-compose-infra up` to start 
     - infrastructure services:
