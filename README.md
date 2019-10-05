@@ -41,7 +41,7 @@ The above microservices integrates with the following infrastructure components:
 - [Jaeger](https://www.jaegertracing.io/) (Distributed tracing)
 - [Prometheus](https://prometheus.io/) (Time-series metrics collector)
 - [Grafana](https://grafana.com/) (Metrics UI)
-- [OpenDistro Elasticsearch and Kibana](https://opendistro.github.io/for-elasticsearch-docs/)
+- [OpenDistro Elasticsearch and Kibana](https://opendistro.github.io/for-elasticsearch-docs/) (Distributed logging)
 
 # Middleware services
 The above microservices integrates with the following infrastructure components:
