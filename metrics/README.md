@@ -10,7 +10,7 @@
 ## Grafana
 - JVM dashboard is at _grafana/provisioning/dashboards/jvm-micrometer.json_
 - A default Prometheus dashboard provider configuration is at _grafana/provisioning/dashboards/dashboard.yml_
-    - This points ot the above prometheus installation
+    - This points to the above prometheus installation
 
 # Urls
 - [Prometheus](http://localhost:9090)
