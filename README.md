@@ -1,17 +1,17 @@
 # BOOTiful Microservices
-Spring-boot based Microservice platform that includes 
-- Distributed messaging
-- Distributed logging
-- Distributed tracing
-- Metrics collection and visualization
+Spring-boot based Microservice platform with 
+- Distributed messaging ([Apache Kafka](https://kafka.apache.org/))
+- Distributed logging ([Fluentd](https://www.fluentd.org/), [OpenDistro Elasticsearch](https://opendistro.github.io/for-elasticsearch-docs/))
+- Distributed tracing ([Jaeger](https://www.jaegertracing.io/))
+- Metrics collection and visualization ([Prometheus](https://prometheus.io/), [Grafana](https://grafana.com/))
 
 # Understanding components in this project
-## Spring boot parent pom
+## Spring boot parent pom (anair-parent-pom)
 - anair-parent-pom is the parent pom that manages commonly used dependencies and plugins. 
 - All services in this project will extend from this parent pom.
 - [Read more...](anair-parent-pom/README.md)
 
-## Spring boot Rest Maven archetype
+## Spring boot Rest Maven archetype (anair-rest-archetype) 
 - Template project that can be used to generate a Restful spring boot application with sample java classes, properties
 - [Read more...](anair-rest-archetype/README.md)
 
@@ -34,17 +34,17 @@ Publish application and system logs to a centralized server.
 - Visualize logs in Kibana
 
 ## Metrics
-- [Read more on Metrics](metrics/README.md)
+- [Read more on Metrics...](metrics/README.md)
 
 # Infrastructure services
-The above microservices integrates with the following infrastructure components:
+The spring boot microservices integrates with the following infrastructure components:
 - [Jaeger](https://www.jaegertracing.io/) (Distributed tracing)
 - [Prometheus](https://prometheus.io/) (Time-series metrics collector)
 - [Grafana](https://grafana.com/) (Metrics UI)
 - [OpenDistro Elasticsearch and Kibana](https://opendistro.github.io/for-elasticsearch-docs/) (Distributed logging)
 
 # Middleware services
-The above microservices integrates with the following middleware components:
+The spring boot microservices integrates with the following middleware components:
 - [Apache Zookeeper](https://zookeeper.apache.org/) (Distributed coordination for Kafka)
 - [Apache Kafka](https://kafka.apache.org/) (Distributed messaging)
 
