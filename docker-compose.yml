@@ -56,7 +56,7 @@ services:
         tag: kafka
 
 
-##---- Microservices ----##
+###---- Microservices ----##
   service-admin:
     build: anair-service-admin
     container_name: anair-service-admin
@@ -127,4 +127,4 @@ services:
 networks:
   default:
     external:
-      name: spring-boot-microservices_default
+      name: spring_boot_microservices_default

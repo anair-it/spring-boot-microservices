@@ -3,7 +3,7 @@ Spring-boot based Microservice platform with
 - Distributed messaging ([Apache Kafka](https://kafka.apache.org/))
 - Distributed logging ([Fluentd](https://www.fluentd.org/), [OpenDistro Elasticsearch](https://opendistro.github.io/for-elasticsearch-docs/))
 - Distributed tracing ([Jaeger](https://www.jaegertracing.io/))
-- Metrics collection and visualization ([Prometheus](https://prometheus.io/), [Grafana](https://grafana.com/))
+- Metrics collection and visualization ([Prometheus](https://prometheus.io/), [Loki](https://grafana.com/oss/loki/), [Grafana](https://grafana.com/))
 
 # Understanding components in this project
 ## Spring boot parent pom (anair-parent-pom)
@@ -29,9 +29,10 @@ Spring-boot based Microservice platform with
 ## Logging
 Publish application and system logs to a centralized server.
 - Logs from applications and systems are collected by [Fluentd](https://www.fluentd.org/)
-    - Review fluentd conf at _logging/fluentd/conf/fluent.conf_
-- Fluentd publishes the logs to [OpenDistro Elasticsearch](https://opendistro.github.io/for-elasticsearch-docs/) server
+    - Review fluentd conf at _logging/fluentd/conf/fluent.conf_ that has elasticsearch and loki outputs
+- Fluentd publishes the logs to [OpenDistro Elasticsearch](https://opendistro.github.io/for-elasticsearch-docs/) server and Loki
 - Visualize logs in Kibana
+- Visualize logs in Grafana using Loki datasource
 
 ## Metrics
 - [Read more on Metrics...](metrics/README.md)
@@ -60,7 +61,8 @@ The spring boot microservices integrates with the following middleware component
         - Kibana
         - Prometheus
         - Prometheus node exporter
-        - CAdvisor
+        - cAdvisor
+        - Loki
         - Grafana
 
 - Run `docker-compose up` to start 
@@ -83,7 +85,8 @@ The spring boot microservices integrates with the following middleware component
 - [Jaeger](http://localhost:16686)
 - [Prometheus](http://localhost:9090)
 - [Grafana](https://localhost:3000)
-    - Login as admin/admin
+    - Login initially as admin/admin. If asked to enter new password, do so and note it down.
+- [cAdvisor](http://localhost:28080)
 - [Kibana](https://localhost:5601)
     - Login as admin/admin    
 - [Swagger - Service A](http://localhost:8080/anair-service-a/swagger-ui.html)

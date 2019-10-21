@@ -17,6 +17,25 @@ services:
       - "14268:14268"
       - "9411:9411"
 
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    restart: unless-stopped
+    expose:
+      - 9100
+
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - 8090:8080
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -31,28 +50,24 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
       - '--web.console.templates=/usr/share/prometheus/consoles'
+      - "--log.level=error"
     links:
       - cadvisor:cadvisor
       - node-exporter:node-exporter
+    depends_on:
+      - cadvisor
+      - node-exporter
 
-  node-exporter:
-    image: prom/node-exporter:latest
-    container_name: monitoring_node_exporter
-    restart: unless-stopped
-    expose:
-      - 9100
-
-  cadvisor:
-    image: google/cadvisor:latest
-    container_name: monitoring_cadvisor
-    restart: unless-stopped
+  loki:
+    image: grafana/loki
+    container_name: loki
+    restart: on-failure
+    ports:
+      - 3100:3100
+    command:
+      - "-config.file=/etc/loki/loki-config.yaml"
     volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    expose:
-      - 28080
+      - ./metrics/loki/conf:/etc/loki/
 
   grafana:
     image: grafana/grafana
@@ -61,6 +76,7 @@ services:
     restart: on-failure
     depends_on:
       - prometheus
+      - loki
     ports:
       - 3000:3000
     volumes:
