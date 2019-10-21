@@ -41,7 +41,8 @@ Publish application and system logs to a centralized server.
 The spring boot microservices integrates with the following infrastructure components:
 - [Jaeger](https://www.jaegertracing.io/) (Distributed tracing)
 - [Prometheus](https://prometheus.io/) (Time-series metrics collector)
-- [Grafana](https://grafana.com/) (Metrics UI)
+- [Loki](https://grafana.com/oss/loki/) (Index free log collector just like Prometheus)
+- [Grafana](https://grafana.com/) (View Prometheus metrics and Loki logs)
 - [OpenDistro Elasticsearch and Kibana](https://opendistro.github.io/for-elasticsearch-docs/) (Distributed logging)
 
 # Middleware services
