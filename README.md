@@ -55,16 +55,15 @@ The spring boot microservices integrates with the following middleware component
 - Navigate to this project
 - Review _docker-compose.yml_ and _docker-compose-infra.yml_ files
 - Run `mvn clean package` on anair-service-a, anair-service-b, anair-service-c, anair-service-admin. This has to be done anytime code is changed and has to be deployed in docker.
-- Run `docker-compose -f docker-compose-infra up` to start 
-    - infrastructure services:
-        - Jaeger
-        - Elasticsearch
-        - Kibana
-        - Prometheus
-        - Prometheus node exporter
-        - cAdvisor
-        - Loki
-        - Grafana
+- Run `docker-compose -f docker-compose-infra up` to start infrastructure services:
+    - Jaeger
+    - Elasticsearch
+    - Kibana
+    - Prometheus
+    - Prometheus node exporter
+    - cAdvisor
+    - Loki
+    - Grafana
 
 - Run `docker-compose up` to start 
     - middleware services:
