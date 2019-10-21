@@ -21,7 +21,7 @@ Visualize logs in Grafana.
 - [Prometheus](http://localhost:9090)
 - [Grafana](https://localhost:3000)
     - Login initially as admin/admin. If asked to enter new password, do so and note it down.
-- [cAdvisor](http://localhost:28080)
+- [cAdvisor](http://localhost:8090)
 - [Loki healthcheck](http://localhost:3100/ready)
 - [Loki metrics](http://localhost:3100/metrics)
     

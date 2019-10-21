@@ -87,7 +87,7 @@ The spring boot microservices integrates with the following middleware component
 - [Prometheus](http://localhost:9090)
 - [Grafana](https://localhost:3000)
     - Login initially as admin/admin. If asked to enter new password, do so and note it down.
-- [cAdvisor](http://localhost:28080)
+- [cAdvisor](http://localhost:8090)
 - [Kibana](https://localhost:5601)
     - Login as admin/admin    
 - [Swagger - Service A](http://localhost:8080/anair-service-a/swagger-ui.html)
