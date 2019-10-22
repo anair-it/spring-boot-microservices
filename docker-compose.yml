@@ -68,7 +68,7 @@ services:
     container_name: anair-service-a
     environment:
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://service-admin:18080/admin
-      - BASEURL_SERVICE_C=http://service-c:8082/anair-service-c
+      - BASEURL_SERVICE_C=http://service-c:8083/anair-service-c
       - OPENTRACING_JAEGER_UDP-SENDER_HOST=jaeger
       - SPRING.KAFKA.BOOTSTRAPSERVERS=kafka:9092
       - LOG_APPENDER=LOGSTASH_STDOUT
