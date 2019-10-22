@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a-deploy
+  labels:
+    app: service-a
+  namespace: anair
+spec:
+  selector:
+    matchLabels:
+      app: service-a
+  template:
+    metadata:
+      labels:
+        app: service-a
+    spec:
+      containers:
+        - name: service-a
+          livenessProbe:
+            httpGet:
+              path: /anair-service-a/actuator/health
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 3
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            httpGet:
+              path: /anair-service-a/actuator/info
+              port: 8081

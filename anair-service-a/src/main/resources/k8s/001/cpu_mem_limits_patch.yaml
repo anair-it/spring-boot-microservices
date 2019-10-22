@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a-deploy
+  labels:
+    app: service-a
+  namespace: anair
+spec:
+  selector:
+    matchLabels:
+      app: service-a
+  template:
+    metadata:
+      labels:
+        app: service-a
+    spec:
+      containers:
+        - name: service-a
+          resources:
+            limits:
+              memory: 1000Mi
+              cpu: 1
+            requests:
+              memory: 1000Mi
+              cpu: 100m
+          env:
+          - name: JAVA_OPTS
+            value: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1"

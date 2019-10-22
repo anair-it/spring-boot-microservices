@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a-deploy
+  labels:
+    app: service-a
+  namespace: anair
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: service-a

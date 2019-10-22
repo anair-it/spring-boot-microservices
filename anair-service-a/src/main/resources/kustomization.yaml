@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: anair
+resources:
+- k8s/000/service.yaml
+- k8s/000/deployment.yaml
+configMapGenerator:
+- files:
+  - application.properties
+  name: service-a-configmap
+patchesStrategicMerge:
+- k8s/001/cpu_mem_limits_patch.yaml
+- k8s/001/healthcheck_patch.yaml
+- k8s/001/add_replicas.yaml

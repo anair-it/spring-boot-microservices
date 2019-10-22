@@ -97,10 +97,10 @@
                                             <LOG_LEVEL>INFO</LOG_LEVEL>
                                         </env>
                                         <ports>
-                                            <port>8081:8081</port>
+                                            <port>8082:8082</port>
                                         </ports>
                                         <wait>
-                                            <url>http://localhost:8081/anair-service-b/actuator/health</url>
+                                            <url>http://localhost:8082/anair-service-b/actuator/health</url>
                                             <time>10000</time>
                                         </wait>
                                     </run>

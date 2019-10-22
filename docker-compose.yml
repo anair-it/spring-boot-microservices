@@ -78,7 +78,7 @@ services:
     links:
       - fluentd
     ports:
-      - 8081:8080
+      - 8081:8081
     logging:
       driver: "fluentd"
       options:
@@ -99,7 +99,7 @@ services:
     links:
       - fluentd
     ports:
-      - 8082:8081
+      - 8082:8082
     logging:
       driver: "fluentd"
       options:
@@ -115,7 +115,7 @@ services:
       - LOG_APPENDER=LOGSTASH_STDOUT
       - LOG_LEVEL=INFO
     ports:
-      - 8083:8082
+      - 8083:8083
     links:
       - fluentd
     logging:

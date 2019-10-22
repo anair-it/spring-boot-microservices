@@ -89,8 +89,8 @@ The spring boot microservices integrates with the following middleware component
 - [cAdvisor](http://localhost:8090)
 - [Kibana](https://localhost:5601)
     - Login as admin/admin    
-- [Swagger - Service A](http://localhost:8080/anair-service-a/swagger-ui.html)
-- [Swagger - Service C](http://localhost:8082/anair-service-c/swagger-ui.html)
+- [Swagger - Service A](http://localhost:8081/anair-service-a/swagger-ui.html)
+- [Swagger - Service C](http://localhost:8083/anair-service-c/swagger-ui.html)
 - [Spring boot admin](http://localhost:18080/admin)
     - Login as admin/admin
 

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a-deploy
+  labels:
+    app: service-a
+  namespace: anair
+spec:
+  selector:
+    matchLabels:
+      app: service-a
+  template:
+    metadata:
+      labels:
+        app: service-a
+    spec:
+      containers:
+        - name: service-a
+          image: service-a
+          ports:
+            - containerPort: 8081
+          volumeMounts:
+            - name: service-a-config
+              mountPath: /config
+          imagePullPolicy: Never
+      volumes:
+        - name: "service-a-config"
+          configMap:
+            name: "service-a-configmap"
