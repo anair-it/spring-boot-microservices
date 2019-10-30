@@ -127,4 +127,4 @@ services:
 networks:
   default:
     external:
-      name: spring_boot_microservices_default
+      name: spring-boot-microservices_default
