@@ -26,9 +26,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
 
-        <spring-boot.version>2.1.8.RELEASE</spring-boot.version>
+        <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
 
         <commons-io.version>2.6</commons-io.version>
         <commons-lang3.version>3.9</commons-lang3.version>
@@ -37,8 +39,9 @@
         <swagger.version>2.9.2</swagger.version>
         <hikari.version>3.4.1</hikari.version>
         <spring-boot-admin.version>2.1.6</spring-boot-admin.version>
+        <asm.version>7.2</asm.version>
 
-        <jacoco-plugin.version>0.8.4</jacoco-plugin.version>
+        <jacoco-plugin.version>0.8.5</jacoco-plugin.version>
         <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
         <spring-boot-thin-maven-plugin.version>1.0.22.RELEASE</spring-boot-thin-maven-plugin.version>
 
@@ -230,6 +233,9 @@
                             <exclude>**/*IntegTest.java</exclude>
                             <exclude>**/*IntegrationTest.java</exclude>
                         </excludes>
+                        <argLine>
+                            --illegal-access=permit
+                        </argLine>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -241,45 +247,9 @@
                             <include>**/*IntegTest</include>
                             <include>**/*IntegrationTest</include>
                         </includes>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>io.github.swagger2markup</groupId>
-                    <artifactId>swagger2markup-maven-plugin</artifactId>
-                    <version>1.3.7</version>
-                    <configuration>
-                        <swaggerInput>${project.build.directory}/generated-sources/swagger.json</swaggerInput>
-                        <outputDir>${swagger.output.dir}</outputDir>
-                        <config>
-                            <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
-                        </config>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.asciidoctor</groupId>
-                    <artifactId>asciidoctor-maven-plugin</artifactId>
-                    <version>1.5.6</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.asciidoctor</groupId>
-                            <artifactId>asciidoctorj-pdf</artifactId>
-                            <version>1.5.0-alpha.18</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.jruby</groupId>
-                            <artifactId>jruby-complete</artifactId>
-                            <version>9.2.7.0</version>
-                        </dependency>
-                    </dependencies>
-                    <configuration>
-                        <sourceDocumentName>anair.adoc</sourceDocumentName>
-                        <outputDirectory>${project.build.directory}/swaggerreport</outputDirectory>
-                        <attributes>
-                            <doctype>book</doctype>
-                            <toc>left</toc>
-                            <toclevels>3</toclevels>
-                            <generated>${swagger.output.dir}</generated>
-                        </attributes>
+                        <argLine>
+                            --illegal-access=permit
+                        </argLine>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -358,6 +328,20 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>${java.version}</release>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>${asm.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

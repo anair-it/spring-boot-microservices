@@ -1,7 +1,7 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-FROM openjdk:8-jre-alpine
+FROM adoptopenjdk/openjdk11:alpine-jre
 
 LABEL maintainer="Anoop Nair"
 

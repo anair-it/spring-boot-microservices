@@ -5,6 +5,11 @@ Spring-boot based Microservice platform with
 - Distributed tracing ([Jaeger](https://www.jaegertracing.io/))
 - Metrics collection and visualization ([Prometheus](https://prometheus.io/), [Loki](https://grafana.com/oss/loki/), [Grafana](https://grafana.com/))
 
+# Pre-requisite
+- JDK 11 compiler
+- Docker > 1.18 (Docker desktop on Windows and MacOS will work)
+- Docker compose (latest version. Comes with Docker desktop)
+
 # Understanding components in this project
 ## Spring boot parent pom (anair-parent-pom)
 - anair-parent-pom is the parent pom that manages commonly used dependencies and plugins. 

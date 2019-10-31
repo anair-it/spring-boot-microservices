@@ -57,14 +57,14 @@ public class ServiceARestControllerTest {
                         .setLastName("lname1"))
                 .build();
         Mockito.when(bookEntity.getBody()).thenReturn(book);
-        Mockito.when(restTemplate.getForEntity("http://localhost:8082/anair-service-c/book/1", Books.Book.class)).thenReturn(bookEntity);
+        Mockito.when(restTemplate.getForEntity("http://localhost:8083/anair-service-c/book/1", Books.Book.class)).thenReturn(bookEntity);
 
         mockMvc.perform(get("/publish/anair"))
                 .andExpect(status().isOk())
                 .andReturn();
 
         Mockito.verify(publishService).publish("anair");
-        Mockito.verify(restTemplate).getForEntity("http://localhost:8082/anair-service-c/book/1", Books.Book.class);
+        Mockito.verify(restTemplate).getForEntity("http://localhost:8083/anair-service-c/book/1", Books.Book.class);
         Mockito.verify(bookEntity).getStatusCode();
         Mockito.verify(bookEntity).getBody();
     }
@@ -83,14 +83,14 @@ public class ServiceARestControllerTest {
         ResponseEntity bookEntity = Mockito.mock(ResponseEntity.class);
         Mockito.doNothing().when(publishService).publish("anair");
         Mockito.when(bookEntity.getStatusCode()).thenReturn(HttpStatus.INTERNAL_SERVER_ERROR);
-        Mockito.when(restTemplate.getForEntity("http://localhost:8082/anair-service-c/book/1", Books.Book.class)).thenReturn(bookEntity);
+        Mockito.when(restTemplate.getForEntity("http://localhost:8083/anair-service-c/book/1", Books.Book.class)).thenReturn(bookEntity);
 
         mockMvc.perform(get("/publish/anair"))
                 .andExpect(status().is5xxServerError())
                 .andReturn();
 
         Mockito.verify(publishService).publish("anair");
-        Mockito.verify(restTemplate).getForEntity("http://localhost:8082/anair-service-c/book/1", Books.Book.class);
+        Mockito.verify(restTemplate).getForEntity("http://localhost:8083/anair-service-c/book/1", Books.Book.class);
         Mockito.verify(bookEntity).getStatusCode();
     }
 

@@ -63,6 +63,7 @@ public class ServiceARestController {
     public ResponseEntity<String> publish(@ApiParam(value = "userId", required = true) @NotBlank @PathVariable("userId") final String userId) {
         publishService.publish(userId);
         ResponseEntity<Books.Book> book = protoRestTemplate.getForEntity(baseurlServiceC+"/book/1", Books.Book.class);
+
         if(book.getStatusCode().is2xxSuccessful()){
             logger.info("Received book for id: 1 -> {}", book.getBody().toString());
             return ResponseEntity.status(HttpStatus.OK).body(book.toString());
