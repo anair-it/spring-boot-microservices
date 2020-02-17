@@ -112,6 +112,23 @@ services:
     depends_on:
       - elasticsearch
 
+#  localstack:
+#    image: localstack/localstack
+#    restart: on-failure
+#    container_name: localstack
+#    ports:
+#      - 4567-4599:4567-4599
+#      - 8088:8080
+#    environment:
+#      - SERVICES=s3,lambda,sqs
+#      - DEBUG=1
+#      - LAMBDA_EXECUTOR=local
+#      - DATA_DIR=/tmp/localstack/data
+#    volumes:
+#      - ./aws:/docker-entrypoint-initaws.d
+#      - ./.localstack:/tmp/localstack
+#      - /var/run/docker.sock:/var/run/docker.sock
+
 volumes:
   prometheus_data: {}
   grafana_data: {}

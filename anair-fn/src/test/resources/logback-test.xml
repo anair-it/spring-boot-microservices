@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <property name="log.appender" value="STDOUT"/>
+    <property name="log.level" value="INFO"/>
+
+    <include resource = "logback-base.xml"/>
+
+    <logger name="pl" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="org.junit" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <logger name="org.mockito" level="error" additivity="false">
+        <appender-ref ref="${log.appender}"/>
+    </logger>
+
+    <root level="${log.level}">
+        <appender-ref ref="${log.appender}"/>
+    </root>
+
+
+</configuration>

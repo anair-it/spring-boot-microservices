@@ -4,7 +4,7 @@
 
     <parent>
         <groupId>org.anair</groupId>
-        <artifactId>anair-parent-pom</artifactId>
+        <artifactId>anair-pom-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
@@ -17,12 +17,18 @@
     <name>anair:anair-service-admin</name>
     <description>anair:anair-service-admin</description>
 
-    <properties>
-        <docker.registry.url>localhost:5000</docker.registry.url>
-    </properties>
-
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-server</artifactId>
@@ -37,11 +43,19 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
-        <finalName>anair-service-admin</finalName>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot.experimental</groupId>
                 <artifactId>spring-boot-thin-maven-plugin</artifactId>
@@ -57,58 +71,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>local-docker-run</id>
-            <activation>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>io.fabric8</groupId>
-                        <artifactId>docker-maven-plugin</artifactId>
-
-                        <configuration>
-                            <!-- Uncomment to add corporate or local docker registry-->
-                            <!--<registry>${docker.registry.url}/${project.artifactId}</registry>-->
-                            <images>
-                                <image>
-                                    <name>anair-service-admin:0.0.1</name>
-                                    <alias>anair-service-admin</alias>
-                                    <run>
-                                        <env>
-                                            <LOG_APPENDER>STDOUT</LOG_APPENDER>
-                                            <LOG_LEVEL>INFO</LOG_LEVEL>
-                                        </env>
-                                        <ports>
-                                            <port>18080:8080</port>
-                                        </ports>
-                                        <wait>
-                                            <url>http://localhost:18080/admin/actuator/health</url>
-                                            <time>10000</time>
-                                        </wait>
-                                    </run>
-                                </image>
-                            </images>
-                            <containerNamePattern>%a</containerNamePattern>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>start</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                    <goal>remove</goal>
-                                    <goal>build</goal>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>

@@ -1,76 +1,20 @@
 version: '3'
 services:
 
-##---- Middleware services ----##
-
-  fluentd:
-    build: logging/fluentd
-    container_name: fluentd
-    volumes:
-      - ./logging/fluentd/conf:/fluentd/etc
-    ports:
-      - 24224:24224
-
-  zookeeper:
-    image: zookeeper:3.5
-    container_name: zookeeper
-    restart: on-failure
-    ports:
-      - 2181:2181
-    links:
-      - fluentd
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: zookeeper
-
-  kafka:
-    image: wurstmeister/kafka:2.11-2.0.0
-    container_name: kafka
-    restart: on-failure
-    hostname: kafka
-    depends_on:
-      - zookeeper
-    links:
-      - fluentd
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
-      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      KAFKA_DELETE_TOPIC_ENABLE: "true"
-      KAFKA_CREATE_TOPICS: "anair.publish:1:1"
-      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1099"
-      JMX_PORT: 1099
-    ports:
-      - 9092:9092
-      - 9094:9094
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: kafka
-
-
-###---- Microservices ----##
   service-admin:
     build: anair-service-admin
     container_name: anair-service-admin
     ports:
       - 18080:18080
 
-  service-a:
-    build: anair-service-a
-    container_name: anair-service-a
+  service-rest:
+    build: anair-service-rest
+    container_name: anair-service-rest
     environment:
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://service-admin:18080/admin
-      - BASEURL_SERVICE_C=http://service-c:8083/anair-service-c
+      - BASEURL_SERVICE_C=http://service-proto:8083/anair-service-proto
       - OPENTRACING_JAEGER_UDP-SENDER_HOST=jaeger
-      - SPRING.KAFKA.BOOTSTRAPSERVERS=kafka:9092
+      - SPRING.KAFKA.BOOTSTRAPSERVERS=localhost:9092
       - LOG_APPENDER=LOGSTASH_STDOUT
       - LOG_LEVEL=INFO
     depends_on:
@@ -83,11 +27,11 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: service-a
+        tag: service-rest
 
-  service-b:
-    build: anair-service-b
-    container_name: anair-service-b
+  service-kafka:
+    build: anair-service-kafka
+    container_name: anair-service-kafka
     environment:
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://service-admin:18080/admin
       - OPENTRACING_JAEGER_UDP-SENDER_HOST=jaeger
@@ -104,11 +48,11 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: service-b
+        tag: service-kafka
 
-  service-c:
-    build: anair-service-c
-    container_name: anair-service-c
+  service-proto:
+    build: anair-service-proto
+    container_name: anair-service-proto
     environment:
       - SPRING_BOOT_ADMIN_CLIENT_URL=http://service-admin:18080/admin
       - OPENTRACING_JAEGER_UDP-SENDER_HOST=jaeger
@@ -122,7 +66,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: service-c
+        tag: service-proto
 
 networks:
   default:

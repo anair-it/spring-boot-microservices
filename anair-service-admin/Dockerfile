@@ -1,6 +1,7 @@
 FROM adoptopenjdk/openjdk11:alpine-jre
 
 LABEL maintainer="Anoop Nair"
+LABEL APP = "Spring boot admin"
 
 # Add the dependencies as a separate layer
 COPY target/thin/root/repository /opt/anair/repository

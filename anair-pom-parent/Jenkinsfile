@@ -1,0 +1,145 @@
+import com.sun.org.apache.regexp.internal.RE
+
+pipeline {
+    tools {
+        maven '3.5.4'
+        jdk 'jdk-1.11.0'
+    }
+    environment {
+        APP_NAME = 'anair-parent-pom'
+        APP_REPO = "https://github.com/anair-it/spring-boot-microservices.git"
+    }
+    parameters {
+        booleanParam(name: "START_RELEASE", description: "Create release branch", defaultValue: false)
+        booleanParam(name: "FINISH_RELEASE", description: "Create release version and make the artifact ready for deployment", defaultValue: false)
+        string(name: "DEVELOP_VERSION", description: "Override the default development version. Example: 1.0.2-SNAPSHOT. Only applies to START_FINISH stage", defaultValue: "")
+    }
+	stages {
+        stage('Build, test, deploy, sonarqube') {
+            steps {
+              echo 'Build and Deploy - START'
+
+               dir ('.') {
+                   withSonarQubeEnv(installationName: 'sonar') {
+                       configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS_XML')]) {
+                           sh """
+                                mvn -B -s $MAVEN_SETTINGS_XML clean deploy sonar:sonar -Dsonar.projectKey=${APP_NAME}-${BRANCH_NAME} -Dsonar.projectName=${APP_NAME}::${BRANCH_NAME}
+                              """
+                       }
+                   }
+               }
+               echo '✿ ✅ Build and Deploy - END'
+	 	    }
+        }
+
+        stage('Start release') {
+            when {
+                allOf {
+                    branch 'develop'
+                    expression { params.START_RELEASE }
+                }
+            }
+
+            steps {
+
+                script {
+                    echo "Start Release - START"
+                    RELEASE_VERSION_NUM = readMavenPom().getVersion().replace("-SNAPSHOT", "")
+                }
+
+                dir('code') {
+                    configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS_XML')]) {
+                        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "github", usernameVariable: 'USER', passwordVariable: 'PASS'],]) {
+                            script {
+
+                                sh 'git config --global credential.helper cache'
+                                sh 'git config --global push.default simple'
+                                git_info = checkout(
+                                        [
+                                                $class                           : 'GitSCM',
+                                                branches                         : [[name: "*/${GIT_BRANCH}"]],
+                                                doGenerateSubmoduleConfigurations: false,
+                                                extensions                       : [[$class: 'AuthorInChangelog']],
+                                                submoduleCfg                     : [],
+                                                userRemoteConfigs                : [
+                                                        [
+                                                                credentialsId: 'github',
+                                                                url          : "${APP_REPO}"
+                                                        ]
+                                                ]
+                                        ]
+                                )
+
+                                echo "Creating branch: release/$RELEASE_VERSION_NUM..."
+                                sh """
+                                    git checkout ${GIT_BRANCH}
+                                """
+                                if(params.DEVELOP_VERSION?.trim()){
+                                    sh """mvn jgitflow:release-start -B -DdevelopmentVersion=$params.DEVELOP_VERSION -Dgit.user=${USER} -Dgit.password=${PASS} -s $MAVEN_SETTINGS_XML"""
+                                }else{
+                                    sh """mvn jgitflow:release-start -B -Dgit.user=${USER} -Dgit.password=${PASS} -s $MAVEN_SETTINGS_XML"""
+                                }
+                                echo "✿ ✅ Start Release - END"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Finish release') {
+            when {
+                allOf {
+                    branch 'release/*'
+                    expression { params.FINISH_RELEASE }
+                }
+            }
+
+            steps {
+                script {
+                    echo "Finish Release on branch: $GIT_BRANCH - START"
+                }
+
+                dir('code') {
+                    configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS_XML')]) {
+                        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "github", usernameVariable: 'USER', passwordVariable: 'PASS'],]) {
+                            script {
+
+                                sh 'git config --global credential.helper cache'
+                                sh 'git config --global push.default simple'
+                                echo "Git branch: $GIT_BRANCH"
+                                git_info = checkout(
+                                        [
+                                                $class                           : 'GitSCM',
+                                                branches                         : [[name: "*/${GIT_BRANCH}"]],
+                                                doGenerateSubmoduleConfigurations: false,
+                                                extensions                       : [[$class: 'AuthorInChangelog']],
+                                                submoduleCfg                     : [],
+                                                userRemoteConfigs                : [
+                                                        [
+                                                                credentialsId: 'github',
+                                                                url          : "${APP_REPO}"
+                                                        ]
+                                                ]
+                                        ]
+                                )
+
+                                sh """
+                                    git checkout ${GIT_BRANCH}
+                                    mvn jgitflow:release-finish -B -Dgit.user=${USER} -Dgit.password=${PASS} -s $MAVEN_SETTINGS_XML
+                                """
+
+                                echo "\u273F \u2705 Finish Release on branch: $GIT_BRANCH - END"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+                cleanWs()
+        }
+    }
+}

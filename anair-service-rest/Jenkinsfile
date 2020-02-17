@@ -1,0 +1,219 @@
+import com.sun.org.apache.regexp.internal.RE
+
+pipeline {
+
+    environment {
+        APP_NAME = 'anair-service-rest'
+        APP_REPO = "https://github.com/anair-it/spring-boot-microservices.git"
+
+        POM_VERSION = readMavenPom().getVersion().replace("-\${branch.name}-\${build.number}", "")
+        ARTIFACT_REPO_DOCKER_REPO = "nexus or artifactory repo" //TODO: Update as required
+        BUSINESS_DOMAIN_NAME = "domain/service" //TODO: Update as required
+        CLEAN_BRANCH_NAME = "${BRANCH_NAME}".replaceAll("/","_")
+
+        TF_STATE = "org.anair/${APP_NAME}/terraform.tfstate"
+    }
+    parameters {
+        choice(name: "BUILD_PROFILE", description: "Build lambda ZIP artifact or docker container", choices: ['container', 'lambda'])
+        booleanParam(name: "START_RELEASE", description: "Create release branch", defaultValue: false)
+        booleanParam(name: "FINISH_RELEASE", description: "Create release version and make the artifact ready for deployment", defaultValue: false)
+        string(name: "RELEASE_DEVELOP_VERSION", description: "Override the default development version. Example: 1.0.2-SNAPSHOT. Only applies to START_FINISH stage", defaultValue: "")
+    }
+	stages {
+        stage('Build, test, deploy, sonarqube') {
+            steps {
+              echo 'Build and Deploy - START'
+
+               dir ('.') {
+                   withSonarQubeEnv(installationName: 'sonar') {
+                       configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS_XML')]) {
+                           sh """
+                                mvn -B -s $MAVEN_SETTINGS_XML clean deploy -U -P ${params.BUILD_PROFILE} sonar:sonar -Dsonar.projectKey=${APP_NAME}-${BRANCH_NAME} -Dsonar.projectName=${APP_NAME}::${BRANCH_NAME}
+                              """
+                       }
+                   }
+               }
+               echo '✿ ✅ Build and Deploy - END'
+	 	    }
+        }
+
+        stage('Docker build and push') {
+            when {
+                expression { params.BUILD_PROFILE == 'container' }
+                anyOf {
+                    branch 'release/*'
+                    branch 'hotfix/*'
+                    branch 'develop'
+                }
+            }
+
+            steps {
+                dir ('.') {
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "nexus or artifactory", usernameVariable: 'USER', passwordVariable: 'PASS'],]){
+                        sh """(
+                        docker build -t ${APP_NAME} .
+                        docker login -u ${USER} -p ${PASS} ${ARTIFACT_REPO_DOCKER_REPO}
+                        docker tag ${APP_NAME} ${ARTIFACT_REPO_DOCKER_REPO}/${BUSINESS_DOMAIN_NAME}/${APP_NAME}:${POM_VERSION}-${CLEAN_BRANCH_NAME}-${BUILD_NUMBER}
+                        docker push ${ARTIFACT_REPO_DOCKER_REPO}/${BUSINESS_DOMAIN_NAME}/${APP_NAME}:${POM_VERSION}-${CLEAN_BRANCH_NAME}-${BUILD_NUMBER}
+
+                        echo "\u273F \u2705 Docker image published: ${APP_NAME}:${POM_VERSION}-${CLEAN_BRANCH_NAME}-${BUILD_NUMBER}"
+                        )"""
+                    }
+                }
+            }
+        }
+
+        stage('Deploy lambda') {
+            when {
+                expression { params.BUILD_PROFILE == 'lambda' }
+                anyOf {
+                    branch 'release/*'
+                    branch 'hotfix/*'
+                    branch 'develop'
+                }
+            }
+
+            steps {
+                dir ('.') {
+                    sh """
+                        terraform init -backend-config="key=${TF_STATE}" -input=false
+                        terraform plan -var 'lambda_filename=${APP_NAME}.zip' -input=false -out=tfplan -lock-timeout=60s
+                        terraform apply -input=false -lock-timeout=60s tfplan
+                    """
+                }
+            }
+        }
+
+        stage('Deploy container') {
+            when {
+                expression { params.BUILD_PROFILE == 'container' }
+                anyOf {
+                    branch 'release/*'
+                    branch 'hotfix/*'
+                    branch 'develop'
+                }
+            }
+
+            steps {
+                dir ('.') {
+                    sh """
+                        terraform init -backend-config="key=${TF_STATE}" -input=false
+                        terraform plan -var 'image=${ARTIFACT_REPO_DOCKER_REPO}/${BUSINESS_DOMAIN_NAME}/${APP_NAME}:${POM_VERSION}-${CLEAN_BRANCH_NAME}-${BUILD_NUMBER}' -input=false -out=tfplan -lock-timeout=60s
+                        terraform apply -input=false -lock-timeout=60s tfplan
+                    """
+                }
+            }
+        }
+
+        stage('Start release') {
+            when {
+                allOf {
+                    branch 'develop'
+                    expression { params.START_RELEASE }
+                }
+            }
+
+            steps {
+
+                script {
+                    echo "Start Release - START"
+                    RELEASE_VERSION_NUM = readMavenPom().getVersion().replace("-SNAPSHOT", "")
+                }
+
+                dir('code') {
+                    configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS_XML')]) {
+                        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "github", usernameVariable: 'USER', passwordVariable: 'PASS'],]) {
+                            script {
+
+                                sh 'git config --global credential.helper cache'
+                                sh 'git config --global push.default simple'
+                                git_info = checkout(
+                                        [
+                                                $class                           : 'GitSCM',
+                                                branches                         : [[name: "*/${GIT_BRANCH}"]],
+                                                doGenerateSubmoduleConfigurations: false,
+                                                extensions                       : [[$class: 'AuthorInChangelog']],
+                                                submoduleCfg                     : [],
+                                                userRemoteConfigs                : [
+                                                        [
+                                                                credentialsId: 'github',
+                                                                url          : "${APP_REPO}"
+                                                        ]
+                                                ]
+                                        ]
+                                )
+
+                                echo "Creating branch: release/$RELEASE_VERSION_NUM..."
+                                sh """
+                                    git checkout ${GIT_BRANCH}
+                                """
+                                if(params.RELEASE_DEVELOP_VERSION?.trim()){
+                                    sh """mvn jgitflow:release-start -B -DdevelopmentVersion=$params.RELEASE_DEVELOP_VERSION -Dgit.user=${USER} -Dgit.password=${PASS} -s $MAVEN_SETTINGS_XML"""
+                                }else{
+                                    sh """mvn jgitflow:release-start -B -Dgit.user=${USER} -Dgit.password=${PASS} -s $MAVEN_SETTINGS_XML"""
+                                }
+                                echo "✿ ✅ Start Release - END"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Finish release') {
+            when {
+                allOf {
+                    branch 'release/*'
+                    expression { params.FINISH_RELEASE }
+                }
+            }
+
+            steps {
+                script {
+                    echo "Finish Release on branch: $GIT_BRANCH - START"
+                }
+
+                dir('code') {
+                    configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS_XML')]) {
+                        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "github", usernameVariable: 'USER', passwordVariable: 'PASS'],]) {
+                            script {
+
+                                sh 'git config --global credential.helper cache'
+                                sh 'git config --global push.default simple'
+                                echo "Git branch: $GIT_BRANCH"
+                                git_info = checkout(
+                                        [
+                                                $class                           : 'GitSCM',
+                                                branches                         : [[name: "*/${GIT_BRANCH}"]],
+                                                doGenerateSubmoduleConfigurations: false,
+                                                extensions                       : [[$class: 'AuthorInChangelog']],
+                                                submoduleCfg                     : [],
+                                                userRemoteConfigs                : [
+                                                        [
+                                                                credentialsId: 'github',
+                                                                url          : "${APP_REPO}"
+                                                        ]
+                                                ]
+                                        ]
+                                )
+
+                                sh """
+                                    git checkout ${GIT_BRANCH}
+                                    mvn jgitflow:release-finish -B -Dgit.user=${USER} -Dgit.password=${PASS} -s $MAVEN_SETTINGS_XML
+                                """
+
+                                echo "\u273F \u2705 Finish Release on branch: $GIT_BRANCH - END"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+            sh 'docker image prune -af'
+        }
+    }
+}
