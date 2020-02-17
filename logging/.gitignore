@@ -1,0 +1,11 @@
+# eclipse directories
+.metadata
+RemoteSystemsTempFiles
+.idea
+target
+*.iml
+.settings/
+/.project
+/.classpath
+/.mvn/
+/.DS_Store

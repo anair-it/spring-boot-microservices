@@ -1,4 +1,4 @@
-FROM fluent/fluentd:v1.7-1
+FROM fluent/fluentd:v1.9-1
 LABEL description="Install fluentd elasticsearch,loki plugin"
 USER root
 RUN apk add --update --virtual .build-deps \
