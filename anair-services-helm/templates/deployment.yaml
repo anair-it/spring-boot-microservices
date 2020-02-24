@@ -41,6 +41,12 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          - name: LOG_LEVEL
+            value: DEBUG
+          envFrom:
+          - configMapRef:
+              name: anair-service-rest-cm
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

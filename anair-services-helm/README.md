@@ -4,13 +4,15 @@
 - Docker image is created for anair-service-rest
 - K8s namespace anair is created (`kubectl create namespace anair`)
 
-# Commands
-```
-# Lint helm script
-helm init .
-
 # Install
-helm install anoop . -n anair
+- Create configmap from application.properties: `kubectl create configmap anair-service-rest-cm --from-file=../anair-service-rest/src/main/resources/application.properties -n anair`
+- Helm commands:
+```
+    # Lint helm script
+    helm init .
+    
+    # Install
+    helm install anoop . -n anair
 ```
 
 # Verify
