@@ -44,6 +44,9 @@ Spring-boot based Microservice platform with
 - [Lambda Function](anair-fn/README.md)
     - AWS lambda Fn invoked using SQS and/or CloudWatch event. Creates a S3 file and sends a message to an outbound SQS queue
 
+## Helm project for anair-service-rest
+- Helm scripts to deploy service-rest to k8s cluster. [Read more](anair-services-helm/README.md)
+
 ## Logging
 Publish application and system logs to a centralized server.
 - Logs from applications and systems are collected by [Fluentd](https://www.fluentd.org/)
