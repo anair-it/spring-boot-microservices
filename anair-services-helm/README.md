@@ -5,22 +5,29 @@
 - K8s namespace anair is created (`kubectl create namespace anair`)
 
 # Install
-- Create configmap from application.properties: `kubectl create configmap anair-service-rest-cm --from-file=../anair-service-rest/src/main/resources/application.properties -n anair`
 - Helm commands:
-```
-    # Lint helm script
-    helm init .
-    
-    # Install
-    helm install anoop . -n anair
-```
+```shell script
+# Lint helm script
+helm lint .
+
+# Install
+helm install demo . -n anair
 
 # Verify
-- Verify pod is created and running: `kubectl get po -n anair`
-- Get the application URL by running these commands:
-```    
-    export NODE_PORT=$(kubectl get --namespace anair -o jsonpath="{.spec.ports[0].nodePort}" services anoop-anair-services-helm)
-    export NODE_IP=$(kubectl get nodes --namespace anair -o jsonpath="{.items[0].status.addresses[0].address}")
-    echo http://$NODE_IP:$NODE_PORT
+helm ls -a -n aap
+helm history demo -n anair
+
+# Upgrade with new changes
+helm upgrade demo . -n anair
+
+# Rollback version 2
+helm rollback demo 2 -n anair 
 ```
-- Swagger page: __http://$NODE_IP:$NODE_PORT/anair-service-rest/swagger-ui.html__
+- Enable port forward. Get pod name and replace in: `kubectl port-forward {{PODNAME}} 8080:8080 -n anair`
+
+# Verify
+- Verify pod is created and running: `kubectl get all -n anair`
+- Open Kubernetes dashboard
+    - Select namespace "anair" and review components
+- Go to `http://localhost:8080/anair-service-rest/actuator/health`
+- Go to `http://localhost:8080/anair-service-rest/swagger-ui.html`
