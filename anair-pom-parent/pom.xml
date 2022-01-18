@@ -32,7 +32,7 @@
 
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
 
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <hikari.version>3.4.1</hikari.version>
